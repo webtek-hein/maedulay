@@ -1,42 +1,32 @@
-Minimum requirements:
-Client:
-Signup/ Login
--View available services
--Book service
--Cancel services
--Sorting
--Searching
--Filtering
--Payment
-Server-side:
--Signup/ Login
--Register services
--Accept/ reject requests
--View logs
 
-1. Tutorial
+[Specifications]
 Client
-
-base_url = http://fqdn.org/client
-
--Signup/ Login
+- Login - Done
 
 GET /client/tutorials
--View available subjects/teachers/schedules/tutorial fee
+- View available subjects/teachers/schedules/tutorial fee - Done
+
 POST /client/tutorials
--Book tutorial
+- Book tutorial - Done
+
 DELETE /client/tutorials
--Cancel tutorial
+- Cancel tutorial - Done
 
-POST /client/payment
-
-Query String: Sorting
-Query String: Searching
-Query String: Filtering
+Query String
+- Sorting
+- Searching
+- Filtering
 
 
 Tutorial
--Signup/ Login
--Register specialized subject/s/ schedule
--Accept/ reject requests
--View logs
+- Login
+- Accept/ reject requests
+- View logs
+
+
+[Optional]
+- Signup
+- Register specialized subject/s/ schedule
+- Payment
+
+

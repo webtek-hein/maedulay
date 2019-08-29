@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('partials/head'); %>
+</head>
+<body>
+	<%- include('partials/nav'); %>
+
+	<section id="hero" class="wow fadeIn">
+		<div class="hero-container">
+			<h1>Welcome to eTutorials</h1>
+			<h2>Welcome to eTutorials</h2>
+			<img src="/img/hero-img.png" alt="Hero Imgs">
+			<a href="#get-started" class="btn-get-started scrollto">Get Started</a>
+			
+		</div>
+	</section>
+
+	<section id="get-started" class="padd-section text-center wow fadeInUp">
+
+		<div class="container">
+			<div class="section-title text-center">
+
+				<h2>Subjects</h2>
+				<p class="separator">Choose from the list.</p>
+
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+
+				<% subjects.forEach(function(subject){ %>
+
+				<% var button_text = 'Book Now'%>
+				<% var status = 'none'%>
+				<% var modal = '#subject_modal'%>
+				<% var bookid = ''%>
+
+				<% if (booking[subject.subjectid]) {%>
+				<% status = booking[subject.subjectid].status%>
+				<% bookid = booking[subject.subjectid].bookid%>
+				
+
+
+				<% if (booking[subject.subjectid].status == 'pending'){ %>
+				<% button_text = 'Cancel Request'%>
+				<% modal = '#verify'%>
+				<%}%>
+				<% if (booking[subject.subjectid].status == 'booked'){ %>
+				<% button_text = 'Cancel Booking'%>
+				<% modal = '#verify'%>
+				<%}%>
+				<%}%>
+
+
+				<div class="col-md-6 col-lg-4">
+					<div class="feature-block">
+
+						<img src="/img/svg/cloud.svg" alt="img" class="img-fluid">
+						<h4><%= subject.name %></h4>
+						<p><%= subject.description %></p>
+						<p>Fee: <b>PHP <%= subject.fee %></b></p>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-bookid="<%= bookid %>" data-id="<%= subject.subjectid %>" data-target="<%= modal %>">
+							<%= button_text %>
+						</button>
+					</div>
+				</div>
+
+
+				<% }); %>
+			</div>
+
+		</div>
+
+	</section>
+
+	<%- include('modals/book'); %>
+	<%- include('modals/verification'); %>
+</body>
+<footer class="footer">
+	<%- include('partials/footer'); %>
+	<script type="text/javascript">
+		$('#subject_modal').on('show.bs.modal', function (e) {
+			var id = $(e.relatedTarget).data('id')
+			select = $('#schedule')
+			options = '<option selected>Choose...</option>'
+			$.ajax({
+				method: "GET",
+				url: "/client/tutorials?subject_id="+id,
+			}).done(function(result) {
+				for(var key in result) {
+					var value = result[key];
+					options += '<option value='+key+'>'+value.schedule+'</option>'
+				}
+				select.html(options)
+
+				select.on('change', function(argument) {
+					key = $(this).val()
+					if(result[key]){
+						$('#teacher').html(result[key].teacher)
+					}
+				})
+
+			})
+		}).on('hidden.bs.modal',function(argument) {
+			$('#teacher').html('')
+		})
+
+		$('#verify').on('show.bs.modal',function(e) {
+			var bookid = $(e.relatedTarget).data('bookid')
+
+			$('#verify_button').on('click',function(e) {
+				$.ajax({
+					method: "PUT",
+					url: "/client/tutorials",
+					data: { bookid: bookid, status: status }
+				})
+				.done(function( result ) {
+					if (result.affectedRows == 1){
+						location.reload();
+					}
+				});
+			})
+		})
+
+
+	</script>
+</footer>
+</html>
